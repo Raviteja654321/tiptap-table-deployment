@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
     faFill,
@@ -10,105 +10,64 @@ import {
     faArrowRight,
     faCircle
 } from '@fortawesome/free-solid-svg-icons';
-import { colorOptions } from '../utils/colorOptions';
+import { COLOR_OPTIONS } from '../utils/colorOptions';
+
+
 
 const DropdownContent = ({ editor, getPos, node, closeDropdown }) => {
-    const [colorsVisible, setColorsVisible] = useState(false);
-    const [performanceData, setPerformanceData] = useState({
-        setBackgroundColor: [],
-        clearCell: [],
-        deleteRow: [],
-        deleteColumn: [],
-        addRowBefore: [],
-        addRowAfter: [],
-        addColumnBefore: [],
-        addColumnAfter: []
-    });
 
-    const measurePerformance = (operationName, callback) => {
-        const start = performance.now();
-        callback();
-        const end = performance.now();
-        const duration = end - start;
-        setPerformanceData(prevData => ({
-            ...prevData,
-            [operationName]: [...prevData[operationName], duration]
-        }));
-        console.log(`${operationName} took ${duration} ms`);
-        return duration;
-    };
-
-    useEffect(() => {
-        // Log average times on unmount
-        return () => {
-            Object.keys(performanceData).forEach(key => {
-                const times = performanceData[key];
-                if (times.length) {
-                    const averageTime = times.reduce((a, b) => a + b, 0) / times.length;
-                    console.log(`Average time for ${key}: ${averageTime} ms`);
-                }
-            });
-        };
-    }, [performanceData]);
-
+    // Set the background color of the cell
     const setBackgroundColor = (color) => {
-        measurePerformance('setBackgroundColor', () => {
-            editor.chain().focus().setCellAttribute('backgroundColor', color).run();
-            closeDropdown();
-        });
+        editor.chain().focus().setCellAttribute('backgroundColor', color).run();
+        closeDropdown();
     };
 
+    // Clear the content of the cell
     const clearCell = () => {
-        measurePerformance('clearCell', () => {
-            let nodeFrom = getPos();
-            let nodeTo = nodeFrom + node.nodeSize;
-            editor.chain().focus().command(({ tr }) => {
-                tr.delete(nodeFrom + 2, nodeTo - 2);
-                return true;
-            }).run();
-            closeDropdown();
-        });
+        let nodeFrom = getPos();
+        let nodeTo = nodeFrom + node.nodeSize;
+        editor.chain().focus().command(({ tr }) => {
+            tr.delete(nodeFrom + 2, nodeTo - 2);
+            return true;
+        }).run();
+        closeDropdown();
     };
 
+    // Delete the row
     const deleteRow = () => {
-        measurePerformance('deleteRow', () => {
-            editor.chain().focus().deleteRow().run();
-            closeDropdown();
-        });
+        editor.chain().focus().deleteRow().run();
+        closeDropdown();
     };
 
+    // Delete the column
     const deleteColumn = () => {
-        measurePerformance('deleteColumn', () => {
-            editor.chain().focus().deleteColumn().run();
-            closeDropdown();
-        });
+        editor.chain().focus().deleteColumn().run();
+        closeDropdown();
     };
 
+    // Add a row before the current row
     const addRowBefore = () => {
-        measurePerformance('addRowBefore', () => {
-            editor.chain().focus().addRowBefore().run();
-            closeDropdown();
-        });
+        editor.chain().focus().addRowBefore().run();
+        closeDropdown();
     };
 
+    // Add a row after the current row
     const addRowAfter = () => {
-        measurePerformance('addRowAfter', () => {
-            editor.chain().focus().addRowAfter().run();
-        });
+        editor.chain().focus().addRowAfter().run();
     };
 
+    // Add a column before the current column
     const addColumnBefore = () => {
-        measurePerformance('addColumnBefore', () => {
-            editor.chain().focus().addColumnBefore().run();
-            closeDropdown();
-        });
+        editor.chain().focus().addColumnBefore().run();
+        closeDropdown();
     };
 
+    // Add a column after the current column
     const addColumnAfter = () => {
-        measurePerformance('addColumnAfter', () => {
-            editor.chain().focus().addColumnAfter().run();
-        });
+        editor.chain().focus().addColumnAfter().run();
     };
+
+    const [colorsVisible, setColorsVisible] = useState(false);
 
     return (
         <ul className="popover-list">
@@ -119,7 +78,7 @@ const DropdownContent = ({ editor, getPos, node, closeDropdown }) => {
                 {colorsVisible && (
                     <div className="dropdown-colors-container">
                         <ul className="popover-colors">
-                            {colorOptions.map(({ name, color }) => (
+                            {COLOR_OPTIONS.map(({ name, color }) => (
                                 <li key={name}>
                                     <button onClick={() => setBackgroundColor(color)}>
                                         <FontAwesomeIcon icon={faCircle} style={{ color, marginRight: '0.5rem' }} /> {name}

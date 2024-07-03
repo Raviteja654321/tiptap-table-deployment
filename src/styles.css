@@ -209,4 +209,9 @@ pre {
   border-radius: 0.25rem;
   margin: 1px;
   height: fit-content;
+  white-space: pre-wrap;
+}
+
+p:empty::before{
+  content: "\00a0";
 }

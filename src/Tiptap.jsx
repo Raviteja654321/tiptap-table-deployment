@@ -49,22 +49,22 @@ const Tiptap = () => {
                     <th>Thing</th>
                 </tr>
                 <tr>
-                    <td>John Doe</td>
-                    <td>New York</td>
-                    <td>Cat</td>
-                    <td>Toy</td>
+                    <td>Ariadne</td>
+                    <td>Argentina</td>
+                    <td>Aardvark</td>
+                    <td>Apple</td>
                 </tr>
                 <tr>
-                    <td>Jane Smith</td>
-                    <td>Los Angeles</td>
-                    <td>Dog</td>
-                    <td>Ball</td>
-                </tr>
-                <tr>
-                    <td>Michael Johnson</td>
-                    <td>Chicago</td>
-                    <td>Bird</td>
+                    <td>Bernice</td>
+                    <td>Barcelona</td>
+                    <td>Bee</td>
                     <td>Book</td>
+                </tr>
+                <tr>
+                    <td>Christina</td>
+                    <td>Chile</td>
+                    <td>Camel</td>
+                    <td>Car</td>
                 </tr>
             </table>
 
