@@ -11,29 +11,52 @@ import ToggleHeaderOptions from './ToggleHeaderOptions';
 
 const iconStyle = { color: '#ffffff', fontSize: '1rem' };
 
-const deleteTable = (editor, parentTable) => {
+const findParentClosestToPos = ($pos, predicate) => {
+    const depth = $pos.depth;
+
+    for (let i = depth; i > 0; i -= 1) {
+        const node = $pos.node(i);
+        if (predicate(node)) {
+            return { pos: $pos.before(i), node };
+        }
+    }
+    return undefined;
+};
+
+const measurePerformance = async (operationName, operation) => {
+    const start = performance.now();
+    await operation();
+    const end = performance.now();
+    console.log(`${operationName} took ${end - start}ms`);
+};
+
+const deleteTable = async (editor, parentTable) => {
     if (parentTable) {
-        editor.chain().focus().deleteTable().run();
+        await measurePerformance('deleteTable', async () => {
+            editor.chain().focus().deleteTable().run();
+        });
     }
 };
 
-const copyTable = (editor, parentTable) => {
+const copyTable = async (editor, parentTable) => {
     if (parentTable) {
-        const { schema } = editor.state;
-        const tableNode = parentTable.node;
-        const domSerializer = DOMSerializer.fromSchema(schema);
+        await measurePerformance('copyTable', async () => {
+            const { schema } = editor.state;
+            const tableNode = parentTable.node;
+            const domSerializer = DOMSerializer.fromSchema(schema);
 
-        const tableFragment = domSerializer.serializeFragment(tableNode.content);
-        const tempDiv = document.createElement('div');
+            const tableFragment = domSerializer.serializeFragment(tableNode.content);
+            const tempDiv = document.createElement('div');
 
-        tempDiv.appendChild(tableFragment);
-        let htmlString = tempDiv.innerHTML;
-        htmlString = `<table>${htmlString}</table>`;
+            tempDiv.appendChild(tableFragment);
+            let htmlString = tempDiv.innerHTML;
+            htmlString = `<table>${htmlString}</table>`;
 
-        const blob = new Blob([htmlString], { type: 'text/html' });
-        const clipboardItem = new ClipboardItem({ 'text/html': blob });
+            const blob = new Blob([htmlString], { type: 'text/html' });
+            const clipboardItem = new ClipboardItem({ 'text/html': blob });
 
-        navigator.clipboard.write([clipboardItem]);
+            await navigator.clipboard.write([clipboardItem]);
+        });
     }
 };
 
@@ -66,4 +89,7 @@ const TableOptions = ({ editor, parentTable }) => {
     );
 };
 
-export {TableOptions};
+export {
+    TableOptions,
+    findParentClosestToPos
+};

@@ -1,4 +1,4 @@
-export const COLOR_OPTIONS = [
+export const colorOptions = [
     { name: 'White', color: '#ffffff' },
     { name: 'Light Blue', color: '#add8e6' },
     { name: 'Gray', color: '#e0e0e0' },
